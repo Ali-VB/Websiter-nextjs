@@ -2,6 +2,7 @@
 
 import { Button } from "@/components/ui/button"
 import { FAQItem } from "@/components/faq-item"
+import Image from "next/image"
 
 export default function WebsiterLanding() {
   return (
@@ -34,7 +35,7 @@ export default function WebsiterLanding() {
                       Simplified
                     </h2>
                     <p className="leading-relaxed max-w-lg text-lg text-slate-800">
-                      Order your professional website like you'd order anything online – simple, transparent, and
+                      Order your professional website like you&apos;d order anything online – simple, transparent, and
                       entirely on your terms.
                     </p>
                   </div>
@@ -203,7 +204,7 @@ export default function WebsiterLanding() {
                         </div>
 
                         <p className="text-xs text-slate-800 leading-relaxed">
-                          Order your professional website like you'd order anything online – simple, transparent, and
+                          Order your professional website like you&apos;d order anything online – simple, transparent, and
                           entirely on your terms.
                         </p>
 
@@ -253,7 +254,7 @@ export default function WebsiterLanding() {
                 </h2>
 
                 <p className="text-xl text-gray-600 leading-relaxed max-w-lg text-pretty">
-                  We design for phones first — because that's where users are. Your site automatically looks flawless on
+                  We design for phones first — because that&apos;s where users are. Your site automatically looks flawless on
                   tablets, laptops, and desktops. No compromises. Just perfect fit, every time.
                 </p>
               </div>
@@ -292,7 +293,13 @@ export default function WebsiterLanding() {
             </div>
 
             <div className="flex justify-center">
-              <img src="/koala-illustration.png" alt="Koala illustration" className="w-full max-w-3xl h-auto" />
+              <Image 
+                src="/koala-illustration.png" 
+                alt="Koala illustration" 
+                width={1200} 
+                height={800} 
+                className="w-full max-w-3xl h-auto" 
+              />
             </div>
           </div>
         </div>
@@ -308,7 +315,7 @@ export default function WebsiterLanding() {
                 <span className="block text-pink-600">Your Control.</span>
               </h2>
               <p className="text-xl text-gray-600 leading-relaxed max-w-4xl mx-auto text-pretty">
-                From day one, you're in charge. Track progress, message our team, request changes, and approve every
+                From day one, you&apos;re in charge. Track progress, message our team, request changes, and approve every
                 step — all from one simple, real-time dashboard. Transparent, intuitive, and always available. Your
                 website, managed your way.
               </p>
