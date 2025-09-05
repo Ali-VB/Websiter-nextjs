@@ -3,8 +3,29 @@
 import { Button } from "@/components/ui/button"
 import { FAQItem } from "@/components/faq-item"
 import Image from "next/image"
+import { useAuth } from "@/contexts/AuthContext"
+import { useRouter } from "next/navigation"
+import { useEffect } from "react"
 
 export default function WebsiterLanding() {
+  const { user } = useAuth()
+  const router = useRouter()
+
+  useEffect(() => {
+    // If user is already logged in, redirect to dashboard
+    if (user) {
+      router.push('/dashboard')
+    }
+  }, [user, router])
+
+  const handleSignInClick = () => {
+    router.push('/login')
+  }
+
+  const handleSignUpClick = () => {
+    router.push('/signup')
+  }
+
   return (
     <div className="min-h-screen bg-gray-100">
       {/* Hero Section */}
@@ -22,6 +43,7 @@ export default function WebsiterLanding() {
                   <Button
                     variant="outline"
                     className="border-gray-900 text-gray-900 hover:bg-gray-50 font-medium px-6 py-2 rounded-full bg-transparent"
+                    onClick={handleSignInClick}
                   >
                     Sign In →
                   </Button>
@@ -65,6 +87,7 @@ export default function WebsiterLanding() {
                     <Button
                       size="lg"
                       className="bg-pink-500 hover:bg-pink-600 text-white font-medium px-8 py-6 text-lg rounded-full"
+                      onClick={handleSignUpClick}
                     >
                       Start Your Order
                     </Button>
@@ -544,6 +567,7 @@ export default function WebsiterLanding() {
               <Button
                 size="lg"
                 className="bg-black hover:bg-gray-800 text-white font-medium px-12 py-6 text-xl rounded-full"
+                onClick={handleSignUpClick}
               >
                 start your order
               </Button>
