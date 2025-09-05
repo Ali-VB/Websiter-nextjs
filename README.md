@@ -20,6 +20,17 @@ You can start editing the page by modifying `app/page.tsx`. The page auto-update
 
 This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
 
+## Documentation
+
+All project documentation has been organized into the [docs](docs/) directory:
+
+- [DEVELOPMENT_GUIDELINES.md](docs/DEVELOPMENT_GUIDELINES.md) - Development workflow and best practices
+- [ROADMAP.md](docs/ROADMAP.md) - Project roadmap and future features
+- [SUPABASE_SETUP.md](docs/SUPABASE_SETUP.md) - Supabase authentication setup instructions
+- [SUPABASE_CONFIGURATION_GUIDE.md](docs/SUPABASE_CONFIGURATION_GUIDE.md) - Detailed Supabase configuration guide
+- [AUTH_TESTING_PLAN.md](docs/AUTH_TESTING_PLAN.md) - Authentication system testing plan
+- [TODO.md](docs/TODO.md) - Immediate tasks and priorities
+
 ## Learn More
 
 To learn more about Next.js, take a look at the following resources:
