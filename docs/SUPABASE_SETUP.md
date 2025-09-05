@@ -72,6 +72,11 @@ In your Supabase project dashboard, you can customize the email templates:
 2. Customize the "Confirm Signup" template
 3. Customize the "Reset Password" template
 
+**Important Note on Email Deliverability:**
+If you're using a `.click` domain, be aware that many email providers flag these domains as potentially suspicious. For production use, consider using a more traditional domain extension like `.com`, `.io`, or `.co` to improve email deliverability.
+
+For development/testing purposes, the `.click` domain will work, but you may need to check your spam/junk folder for confirmation emails.
+
 ### URL Configuration
 
 Make sure to configure the redirect URLs in your Supabase project:
@@ -121,7 +126,7 @@ export default function MyComponent() {
 
 1. Start the development server: `npm run dev`
 2. Navigate to `/signup` to create a new account
-3. Check your email for the confirmation link
+3. Check your email for the confirmation link (check spam/junk folder if not in inbox)
 4. After confirming, navigate to `/login` to sign in
 5. You should be redirected to `/dashboard` after successful login
 
@@ -135,8 +140,18 @@ export default function MyComponent() {
 - Check your spam/junk folder
 - Verify the email templates in Supabase dashboard
 - Ensure the redirect URLs are correctly configured
+- If using a `.click` domain, be aware that it may be flagged by spam filters
 
 ### Session Issues
 - Clear your browser cookies for the site
 - Check the browser console for errors
 - Verify the Supabase client configuration
+
+### Email Deliverability Issues
+If you're experiencing deliverability issues with your emails:
+
+1. Consider using a more traditional domain extension for production
+2. Check [SUPABASE_CONFIGURATION_GUIDE.md](file:///Users/ali-vakili/Desktop/Qoder_build/websiter.click/docs/SUPABASE_CONFIGURATION_GUIDE.md) for detailed email deliverability best practices
+3. Set up proper DNS records (SPF, DKIM, DMARC)
+4. Add a physical address to your email templates
+5. Warm up your domain gradually if it's new

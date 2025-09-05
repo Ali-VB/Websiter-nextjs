@@ -16,38 +16,40 @@ This guide explains how to configure your Supabase project for the Websiter.clic
 
 ### Customize "Confirm Signup" Template
 1. Click on "Confirm Signup" template
-2. Update the template content as needed:
+2. Update the template content with this improved version to address spam filters:
    ```
-   Subject: Confirm Your Websiter.click Account
+   Subject: Confirm Your Websiter Account
    
    Hello,
    
-   Thank you for signing up with Websiter.click! Please confirm your email address by clicking the link below:
+   Thank you for signing up with Websiter!
+   
+   Please confirm your email address by clicking the link below:
    
    [Confirm Email]([[ confirmation_url ]])
    
    If you didn't create an account with us, you can safely ignore this email.
    
    Best regards,
-   The Websiter.click Team
+   The Websiter Team
    ```
 
 ### Customize "Reset Password" Template
 1. Click on "Reset Password" template
-2. Update the template content as needed:
+2. Update the template content with this improved version:
    ```
-   Subject: Reset Your Websiter.click Password
+   Subject: Reset Your Websiter Password
    
    Hello,
    
-   We received a request to reset your password for your Websiter.click account. Click the link below to set a new password:
+   We received a request to reset your password for your Websiter account. Click the link below to set a new password:
    
    [Reset Password]([[ confirmation_url ]])
    
    If you didn't request a password reset, you can safely ignore this email.
    
    Best regards,
-   The Websiter.click Team
+   The Websiter Team
    ```
 
 ## 2. Configure Redirect URLs
@@ -160,3 +162,54 @@ Regularly check Supabase logs for:
 - Failed login attempts
 - Suspicious activity
 - Authentication errors
+
+## Email Deliverability Best Practices
+
+To improve email deliverability and reduce spam filtering:
+
+1. **Avoid suspicious TLDs**: The `.click` domain is often flagged by spam filters. Consider using a more traditional domain extension like `.com`, `.io`, or `.co` for production.
+
+2. **Use a recognizable sender name**: Instead of generic "noreply" addresses, use a recognizable name like "Websiter Team".
+
+3. **Include physical address**: Add your company's physical address to the email footer (required by CAN-SPAM Act).
+
+4. **Add unsubscribe option**: Even for transactional emails, including an unsubscribe link can improve deliverability.
+
+5. **Use plain text alternatives**: Include both HTML and plain text versions of your emails.
+
+6. **Set up proper DNS records**:
+   - SPF (Sender Policy Framework)
+   - DKIM (DomainKeys Identified Mail)
+   - DMARC (Domain-based Message Authentication, Reporting, and Conformance)
+
+7. **Warm up your domain**: If using a new domain, gradually increase email volume over time.
+
+8. **Monitor deliverability**: Use tools like Mail Tester or GlockApps to test your email deliverability.
+
+Here's an improved email template that follows these best practices:
+
+```
+Subject: Confirm Your Websiter Account
+
+Hello,
+
+Thank you for signing up with Websiter!
+
+Please confirm your email address by clicking the link below:
+
+[Confirm Email]([[ confirmation_url ]])
+
+If you didn't create an account with us, you can safely ignore this email.
+
+Best regards,
+The Websiter Team
+
+---
+
+Websiter Inc.
+123 Business Street
+San Francisco, CA 94107
+United States
+
+This email was sent to [[ user.email ]] because you signed up for a Websiter account.
+```
