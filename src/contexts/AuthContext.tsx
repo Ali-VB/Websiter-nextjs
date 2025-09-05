@@ -28,18 +28,27 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     // Check active session
     const getSession = async () => {
-      const { data: { session } } = await supabase.auth.getSession()
-      setUser(session?.user || null)
-      setLoading(false)
-      
-      // Listen for auth changes
-      const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      try {
+        const { data: { session }, error } = await supabase.auth.getSession()
+        if (error) {
+          console.error('Error getting session:', error)
+        }
         setUser(session?.user || null)
         setLoading(false)
-      })
-      
-      return () => {
-        subscription.unsubscribe()
+        
+        // Listen for auth changes
+        const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+          setUser(session?.user || null)
+          setLoading(false)
+        })
+        
+        return () => {
+          subscription.unsubscribe()
+        }
+      } catch (err) {
+        console.error('Error in getSession:', err)
+        setUser(null)
+        setLoading(false)
       }
     }
     
@@ -47,36 +56,96 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, [])
 
   const signUp = async (email: string, password: string) => {
-    return await supabase.auth.signUp({
-      email,
-      password,
-      options: {
-        emailRedirectTo: `${window.location.origin}/auth/confirm`
+    try {
+      const { data, error } = await supabase.auth.signUp({
+        email,
+        password,
+        options: {
+          emailRedirectTo: `${window.location.origin}/auth/confirm`
+        }
+      })
+      
+      if (error) {
+        console.error('Sign up error:', error)
+        return { data: null, error }
       }
-    })
+      
+      return { data, error: null }
+    } catch (err) {
+      console.error('Sign up exception:', err)
+      return { data: null, error: { message: 'An unexpected error occurred' } }
+    }
   }
 
   const signIn = async (email: string, password: string) => {
-    return await supabase.auth.signInWithPassword({
-      email,
-      password
-    })
+    try {
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email,
+        password
+      })
+      
+      if (error) {
+        console.error('Sign in error:', error)
+        return { data: null, error }
+      }
+      
+      return { data, error: null }
+    } catch (err) {
+      console.error('Sign in exception:', err)
+      return { data: null, error: { message: 'An unexpected error occurred' } }
+    }
   }
 
   const signOut = async () => {
-    return await supabase.auth.signOut()
+    try {
+      const { error } = await supabase.auth.signOut()
+      
+      if (error) {
+        console.error('Sign out error:', error)
+        return { error }
+      }
+      
+      return { error: null }
+    } catch (err) {
+      console.error('Sign out exception:', err)
+      return { error: { message: 'An unexpected error occurred' } }
+    }
   }
 
   const resetPassword = async (email: string) => {
-    return await supabase.auth.resetPasswordForEmail(email, {
-      redirectTo: `${window.location.origin}/auth/reset-password`
-    })
+    try {
+      const { data, error } = await supabase.auth.resetPasswordForEmail(email, {
+        redirectTo: `${window.location.origin}/auth/reset-password`
+      })
+      
+      if (error) {
+        console.error('Reset password error:', error)
+        return { data: null, error }
+      }
+      
+      return { data, error: null }
+    } catch (err) {
+      console.error('Reset password exception:', err)
+      return { data: null, error: { message: 'An unexpected error occurred' } }
+    }
   }
 
   const updatePassword = async (password: string) => {
-    return await supabase.auth.updateUser({
-      password
-    })
+    try {
+      const { data, error } = await supabase.auth.updateUser({
+        password
+      })
+      
+      if (error) {
+        console.error('Update password error:', error)
+        return { data: null, error }
+      }
+      
+      return { data, error: null }
+    } catch (err) {
+      console.error('Update password exception:', err)
+      return { data: null, error: { message: 'An unexpected error occurred' } }
+    }
   }
 
   const value = {

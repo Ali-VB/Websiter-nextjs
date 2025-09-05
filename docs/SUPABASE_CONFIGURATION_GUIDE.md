@@ -17,40 +17,156 @@ This guide explains how to configure your Supabase project for the Websiter.clic
 ### Customize "Confirm Signup" Template
 1. Click on "Confirm Signup" template
 2. Update the template content with this improved version to address spam filters:
-   ```
-   Subject: Confirm Your Websiter Account
-   
-   Hello,
-   
-   Thank you for signing up with Websiter!
-   
-   Please confirm your email address by clicking the link below:
-   
-   [Confirm Email]([[ confirmation_url ]])
-   
-   If you didn't create an account with us, you can safely ignore this email.
-   
-   Best regards,
-   The Websiter Team
-   ```
+
+**Subject:** Confirm Your Websiter Account
+
+**HTML Version:**
+```html
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Confirm Your Websiter Account</title>
+</head>
+<body style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px;">
+  <div style="text-align: center; margin-bottom: 30px;">
+    <h1 style="color: #ff6b6b; font-size: 24px; margin-bottom: 10px;">Websiter</h1>
+  </div>
+  
+  <div style="background: #ffffff; padding: 30px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+    <h2 style="color: #333; font-size: 20px; margin-top: 0;">Hello,</h2>
+    
+    <p style="font-size: 16px;">Thank you for signing up with Websiter!</p>
+    
+    <p style="font-size: 16px;">Please confirm your email address by clicking the button below:</p>
+    
+    <div style="text-align: center; margin: 30px 0;">
+      <a href="[[ confirmation_url ]]" 
+         style="background-color: #ff6b6b; color: white; padding: 12px 24px; text-decoration: none; border-radius: 5px; display: inline-block; font-weight: bold; font-size: 16px;">
+        Confirm Email
+      </a>
+    </div>
+    
+    <p style="font-size: 16px;">If you didn't create an account with us, you can safely ignore this email.</p>
+    
+    <p style="font-size: 16px; margin-top: 30px;">Best regards,<br>
+    <strong>The Websiter Team</strong></p>
+  </div>
+  
+  <div style="text-align: center; margin-top: 30px; color: #888; font-size: 14px;">
+    <p>Websiter Inc.<br>
+    123 Business Street<br>
+    San Francisco, CA 94107<br>
+    United States</p>
+    
+    <p>This email was sent to [[ user.email ]] because you signed up for a Websiter account.</p>
+  </div>
+</body>
+</html>
+```
+
+**Plain Text Version:**
+```
+Hello,
+
+Thank you for signing up with Websiter!
+
+Please confirm your email address by clicking the link below:
+
+[[ confirmation_url ]]
+
+If you didn't create an account with us, you can safely ignore this email.
+
+Best regards,
+The Websiter Team
+
+---
+
+Websiter Inc.
+123 Business Street
+San Francisco, CA 94107
+United States
+
+This email was sent to [[ user.email ]] because you signed up for a Websiter account.
+```
 
 ### Customize "Reset Password" Template
 1. Click on "Reset Password" template
 2. Update the template content with this improved version:
-   ```
-   Subject: Reset Your Websiter Password
-   
-   Hello,
-   
-   We received a request to reset your password for your Websiter account. Click the link below to set a new password:
-   
-   [Reset Password]([[ confirmation_url ]])
-   
-   If you didn't request a password reset, you can safely ignore this email.
-   
-   Best regards,
-   The Websiter Team
-   ```
+
+**Subject:** Reset Your Websiter Password
+
+**HTML Version:**
+```html
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Reset Your Websiter Password</title>
+</head>
+<body style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px;">
+  <div style="text-align: center; margin-bottom: 30px;">
+    <h1 style="color: #ff6b6b; font-size: 24px; margin-bottom: 10px;">Websiter</h1>
+  </div>
+  
+  <div style="background: #ffffff; padding: 30px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+    <h2 style="color: #333; font-size: 20px; margin-top: 0;">Hello,</h2>
+    
+    <p style="font-size: 16px;">We received a request to reset your password for your Websiter account.</p>
+    
+    <p style="font-size: 16px;">Click the button below to set a new password:</p>
+    
+    <div style="text-align: center; margin: 30px 0;">
+      <a href="[[ confirmation_url ]]" 
+         style="background-color: #ff6b6b; color: white; padding: 12px 24px; text-decoration: none; border-radius: 5px; display: inline-block; font-weight: bold; font-size: 16px;">
+        Reset Password
+      </a>
+    </div>
+    
+    <p style="font-size: 16px;">If you didn't request a password reset, you can safely ignore this email.</p>
+    
+    <p style="font-size: 16px; margin-top: 30px;">Best regards,<br>
+    <strong>The Websiter Team</strong></p>
+  </div>
+  
+  <div style="text-align: center; margin-top: 30px; color: #888; font-size: 14px;">
+    <p>Websiter Inc.<br>
+    123 Business Street<br>
+    San Francisco, CA 94107<br>
+    United States</p>
+    
+    <p>This email was sent to [[ user.email ]] in response to a password reset request.</p>
+  </div>
+</body>
+</html>
+```
+
+**Plain Text Version:**
+```
+Hello,
+
+We received a request to reset your password for your Websiter account.
+
+Click the link below to set a new password:
+
+[[ confirmation_url ]]
+
+If you didn't request a password reset, you can safely ignore this email.
+
+Best regards,
+The Websiter Team
+
+---
+
+Websiter Inc.
+123 Business Street
+San Francisco, CA 94107
+United States
+
+This email was sent to [[ user.email ]] in response to a password reset request.
+```
 
 ## 2. Configure Redirect URLs
 

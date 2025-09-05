@@ -4,24 +4,26 @@ import { useState, useEffect } from 'react'
 import { supabase } from '@/lib/supabaseClient'
 import { Button } from '@/components/ui/button'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 
 export default function ConfirmEmail() {
   const [message, setMessage] = useState('Confirming your email...')
   const [error, setError] = useState('')
+  const router = useRouter()
 
   useEffect(() => {
     const confirmEmail = async () => {
       try {
-        // Get the token from the URL
-        const hash = window.location.hash.substring(1)
-        const params = new URLSearchParams(hash)
-        const token = params.get('confirmation_token')
+        // Get the token from the URL query parameters
+        const urlParams = new URLSearchParams(window.location.search)
+        const token = urlParams.get('token')
+        const type = urlParams.get('type')
         
-        if (token) {
+        if (token && type) {
           // Confirm the signup using the token
           const { error: confirmError } = await supabase.auth.verifyOtp({
-            type: 'signup',
-            token_hash: token,
+            type: type as any, // 'signup' or 'magiclink' or 'recovery'
+            token,
           })
           
           if (confirmError) {
@@ -31,11 +33,29 @@ export default function ConfirmEmail() {
             setMessage('Email confirmed successfully! You can now sign in.')
           }
         } else {
-          setError('Invalid confirmation link')
-          setMessage('')
+          // Try to get token from hash (fallback for older links)
+          const hash = window.location.hash.substring(1)
+          const hashParams = new URLSearchParams(hash)
+          const hashToken = hashParams.get('confirmation_token')
+          
+          if (hashToken) {
+            const { error: confirmError } = await supabase.auth.verifyOtp({
+              type: 'signup',
+              token: hashToken,
+            })
+            
+            if (confirmError) {
+              setError('Failed to confirm email: ' + confirmError.message)
+              setMessage('')
+            } else {
+              setMessage('Email confirmed successfully! You can now sign in.')
+            }
+          } else {
+            setError('Invalid confirmation link')
+            setMessage('')
+          }
         }
       } catch (err: unknown) {
-        // Handle the error
         console.error('Error confirming email:', err)
         setError('An error occurred while confirming your email')
         setMessage('')

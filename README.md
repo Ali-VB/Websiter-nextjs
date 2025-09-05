@@ -28,6 +28,7 @@ All project documentation has been organized into the [docs](docs/) directory:
 - [ROADMAP.md](docs/ROADMAP.md) - Project roadmap and future features
 - [SUPABASE_SETUP.md](docs/SUPABASE_SETUP.md) - Supabase authentication setup instructions
 - [SUPABASE_CONFIGURATION_GUIDE.md](docs/SUPABASE_CONFIGURATION_GUIDE.md) - Detailed Supabase configuration guide
+- [SUPABASE_AUTH_TROUBLESHOOTING.md](docs/SUPABASE_AUTH_TROUBLESHOOTING.md) - Troubleshooting common authentication issues
 - [AUTH_TESTING_PLAN.md](docs/AUTH_TESTING_PLAN.md) - Authentication system testing plan
 - [TODO.md](docs/TODO.md) - Immediate tasks and priorities
 
