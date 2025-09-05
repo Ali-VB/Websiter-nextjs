@@ -23,6 +23,8 @@ Users see "Invalid confirmation link" immediately after signing up, and don't re
    - `http://localhost:3001/auth/reset-password`
    - For production: `https://yourdomain.com/auth/callback`, etc.
 
+**IMPORTANT**: Make sure to add URLs for all ports you're using. If your app runs on port 3001, you must have the 3001 URLs configured.
+
 **B. Email Confirmation Not Enabled**
 1. Go to **Authentication** → **Settings**
 2. Ensure "Email Confirmations" is toggled ON
@@ -33,7 +35,12 @@ Users see "Invalid confirmation link" immediately after signing up, and don't re
    - For development: `http://localhost:3000` or `http://localhost:3001`
    - For production: `https://yourdomain.com`
 
-**D. Incorrect Email Template Links**
+**D. Environment Variables Mismatch**
+1. Check that your `.env.local` file has the correct `NEXT_PUBLIC_APP_URL`
+2. Make sure it matches the port your app is running on (3000 or 3001)
+3. Restart your development server after making changes
+
+**E. Incorrect Email Template Links**
 1. Go to **Authentication** → **Email Templates**
 2. Check that confirmation URLs in templates use the correct format:
    ```
@@ -91,17 +98,27 @@ export default function ConfirmEmail() {
   useEffect(() => {
     const confirmEmail = async () => {
       try {
+        console.log('Window location:', window.location)
+        console.log('Search params:', window.location.search)
+        console.log('Hash:', window.location.hash)
+        
         // Get the token from the URL query parameters
         const urlParams = new URLSearchParams(window.location.search)
         const token = urlParams.get('token')
         const type = urlParams.get('type')
         
+        console.log('Token from query params:', token)
+        console.log('Type from query params:', type)
+        
         if (token && type) {
           // Confirm the signup using the token
-          const { error: confirmError } = await supabase.auth.verifyOtp({
+          console.log('Verifying OTP with token and type:', { token, type })
+          const { data, error: confirmError } = await supabase.auth.verifyOtp({
             type: type as any, // 'signup' or 'magiclink' or 'recovery'
             token,
           })
+          
+          console.log('Supabase verifyOtp response:', { data, error: confirmError })
           
           if (confirmError) {
             setError('Failed to confirm email: ' + confirmError.message)
@@ -112,14 +129,20 @@ export default function ConfirmEmail() {
         } else {
           // Try to get token from hash (fallback for older links)
           const hash = window.location.hash.substring(1)
+          console.log('Hash content:', hash)
           const hashParams = new URLSearchParams(hash)
           const hashToken = hashParams.get('confirmation_token')
           
+          console.log('Token from hash:', hashToken)
+          
           if (hashToken) {
-            const { error: confirmError } = await supabase.auth.verifyOtp({
+            console.log('Verifying OTP with hash token')
+            const { data, error: confirmError } = await supabase.auth.verifyOtp({
               type: 'signup',
               token: hashToken,
             })
+            
+            console.log('Supabase verifyOtp response (hash):', { data, error: confirmError })
             
             if (confirmError) {
               setError('Failed to confirm email: ' + confirmError.message)
@@ -128,13 +151,31 @@ export default function ConfirmEmail() {
               setMessage('Email confirmed successfully! You can now sign in.')
             }
           } else {
-            setError('Invalid confirmation link')
-            setMessage('')
+            // Try getting token directly from hash without parsing
+            if (hash) {
+              console.log('Trying direct hash verification')
+              const { data, error: confirmError } = await supabase.auth.verifyOtp({
+                type: 'signup',
+                token: hash,
+              })
+              
+              console.log('Supabase verifyOtp response (direct hash):', { data, error: confirmError })
+              
+              if (confirmError) {
+                setError('Failed to confirm email: ' + confirmError.message)
+                setMessage('')
+              } else {
+                setMessage('Email confirmed successfully! You can now sign in.')
+              }
+            } else {
+              setError('Invalid confirmation link - no token found')
+              setMessage('')
+            }
           }
         }
       } catch (err: unknown) {
         console.error('Error confirming email:', err)
-        setError('An error occurred while confirming your email')
+        setError('An error occurred while confirming your email: ' + (err as Error).message)
         setMessage('')
       }
     }
@@ -181,7 +222,7 @@ export default function ConfirmEmail() {
 ```
 
 **B. Update AuthContext Implementation**
-Update [src/contexts/AuthContext.tsx](file:///Users/ali-vakili/Desktop/Qoder_build/websiter.click/src/contexts/AuthContext.tsx) to ensure proper error handling:
+Update [src/contexts/AuthContext.tsx](file:///Users/ali-vakili/Desktop/Qoder_build/websiter.click/src/contexts/AuthContext.tsx) to ensure proper error handling and use environment variables:
 
 ```tsx
 const signUp = async (email: string, password: string) => {
@@ -190,7 +231,7 @@ const signUp = async (email: string, password: string) => {
       email,
       password,
       options: {
-        emailRedirectTo: `${window.location.origin}/auth/confirm`
+        emailRedirectTo: `${process.env.NEXT_PUBLIC_APP_URL}/auth/confirm`
       }
     })
     
@@ -222,6 +263,7 @@ const signUp = async (email: string, password: string) => {
 
 3. **Verify environment variables**:
    - Ensure `.env.local` contains correct Supabase credentials
+   - Make sure `NEXT_PUBLIC_APP_URL` matches your app's port
    - Restart development server after changes
 
 4. **Test with different email providers**:

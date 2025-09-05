@@ -14,17 +14,27 @@ export default function ConfirmEmail() {
   useEffect(() => {
     const confirmEmail = async () => {
       try {
+        console.log('Window location:', window.location)
+        console.log('Search params:', window.location.search)
+        console.log('Hash:', window.location.hash)
+        
         // Get the token from the URL query parameters
         const urlParams = new URLSearchParams(window.location.search)
         const token = urlParams.get('token')
         const type = urlParams.get('type')
         
+        console.log('Token from query params:', token)
+        console.log('Type from query params:', type)
+        
         if (token && type) {
           // Confirm the signup using the token
-          const { error: confirmError } = await supabase.auth.verifyOtp({
+          console.log('Verifying OTP with token and type:', { token, type })
+          const { data, error: confirmError } = await supabase.auth.verifyOtp({
             type: type as any, // 'signup' or 'magiclink' or 'recovery'
             token,
           })
+          
+          console.log('Supabase verifyOtp response:', { data, error: confirmError })
           
           if (confirmError) {
             setError('Failed to confirm email: ' + confirmError.message)
@@ -35,14 +45,20 @@ export default function ConfirmEmail() {
         } else {
           // Try to get token from hash (fallback for older links)
           const hash = window.location.hash.substring(1)
+          console.log('Hash content:', hash)
           const hashParams = new URLSearchParams(hash)
           const hashToken = hashParams.get('confirmation_token')
           
+          console.log('Token from hash:', hashToken)
+          
           if (hashToken) {
-            const { error: confirmError } = await supabase.auth.verifyOtp({
+            console.log('Verifying OTP with hash token')
+            const { data, error: confirmError } = await supabase.auth.verifyOtp({
               type: 'signup',
               token: hashToken,
             })
+            
+            console.log('Supabase verifyOtp response (hash):', { data, error: confirmError })
             
             if (confirmError) {
               setError('Failed to confirm email: ' + confirmError.message)
@@ -51,13 +67,31 @@ export default function ConfirmEmail() {
               setMessage('Email confirmed successfully! You can now sign in.')
             }
           } else {
-            setError('Invalid confirmation link')
-            setMessage('')
+            // Try getting token directly from hash without parsing
+            if (hash) {
+              console.log('Trying direct hash verification')
+              const { data, error: confirmError } = await supabase.auth.verifyOtp({
+                type: 'signup',
+                token: hash,
+              })
+              
+              console.log('Supabase verifyOtp response (direct hash):', { data, error: confirmError })
+              
+              if (confirmError) {
+                setError('Failed to confirm email: ' + confirmError.message)
+                setMessage('')
+              } else {
+                setMessage('Email confirmed successfully! You can now sign in.')
+              }
+            } else {
+              setError('Invalid confirmation link - no token found')
+              setMessage('')
+            }
           }
         }
       } catch (err: unknown) {
         console.error('Error confirming email:', err)
-        setError('An error occurred while confirming your email')
+        setError('An error occurred while confirming your email: ' + (err as Error).message)
         setMessage('')
       }
     }

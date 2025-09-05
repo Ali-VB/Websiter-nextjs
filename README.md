@@ -32,6 +32,16 @@ All project documentation has been organized into the [docs](docs/) directory:
 - [AUTH_TESTING_PLAN.md](docs/AUTH_TESTING_PLAN.md) - Authentication system testing plan
 - [TODO.md](docs/TODO.md) - Immediate tasks and priorities
 
+## Running on Port 3000
+
+This application is configured to run on port 3000 locally. If port 3000 is already in use, you can specify a different port:
+
+```bash
+npm run dev -- -p 3002
+```
+
+Or update the `next.config.ts` file to set a default port.
+
 ## Learn More
 
 To learn more about Next.js, take a look at the following resources:
