@@ -18,20 +18,40 @@ export default function ConfirmEmail() {
         console.log('Search params:', window.location.search)
         console.log('Hash:', window.location.hash)
         
-        // Get the token from the URL query parameters
+        // Get the token and email from the URL query parameters
         const urlParams = new URLSearchParams(window.location.search)
         const token = urlParams.get('token')
         const type = urlParams.get('type')
+        const email = urlParams.get('email')
         
         console.log('Token from query params:', token)
         console.log('Type from query params:', type)
+        console.log('Email from query params:', email)
         
-        if (token && type) {
-          // Confirm the signup using the token
-          console.log('Verifying OTP with token and type:', { token, type })
+        if (token && type && email) {
+          // Confirm the signup using the token and email
+          console.log('Verifying OTP with token, type, and email:', { token, type, email })
           const { data, error: confirmError } = await supabase.auth.verifyOtp({
             type: type as any, // 'signup' or 'magiclink' or 'recovery'
             token,
+            email,
+          })
+          
+          console.log('Supabase verifyOtp response:', { data, error: confirmError })
+          
+          if (confirmError) {
+            setError('Failed to confirm email: ' + confirmError.message)
+            setMessage('')
+          } else {
+            setMessage('Email confirmed successfully! You can now sign in.')
+          }
+        } else if (token && email) {
+          // Fallback when type is not provided
+          console.log('Verifying OTP with token and email:', { token, email })
+          const { data, error: confirmError } = await supabase.auth.verifyOtp({
+            type: 'signup',
+            token,
+            email,
           })
           
           console.log('Supabase verifyOtp response:', { data, error: confirmError })
@@ -48,14 +68,17 @@ export default function ConfirmEmail() {
           console.log('Hash content:', hash)
           const hashParams = new URLSearchParams(hash)
           const hashToken = hashParams.get('confirmation_token')
+          const hashEmail = hashParams.get('email')
           
           console.log('Token from hash:', hashToken)
+          console.log('Email from hash:', hashEmail)
           
-          if (hashToken) {
-            console.log('Verifying OTP with hash token')
+          if (hashToken && hashEmail) {
+            console.log('Verifying OTP with hash token and email')
             const { data, error: confirmError } = await supabase.auth.verifyOtp({
               type: 'signup',
               token: hashToken,
+              email: hashEmail,
             })
             
             console.log('Supabase verifyOtp response (hash):', { data, error: confirmError })
@@ -68,23 +91,34 @@ export default function ConfirmEmail() {
             }
           } else {
             // Try getting token directly from hash without parsing
-            if (hash) {
+            if (hash && hash.includes('confirmation_token')) {
               console.log('Trying direct hash verification')
-              const { data, error: confirmError } = await supabase.auth.verifyOtp({
-                type: 'signup',
-                token: hash,
-              })
+              // Extract token and email from hash
+              const hashUrlParams = new URLSearchParams(hash)
+              const directToken = hashUrlParams.get('confirmation_token')
+              const directEmail = hashUrlParams.get('email')
               
-              console.log('Supabase verifyOtp response (direct hash):', { data, error: confirmError })
-              
-              if (confirmError) {
-                setError('Failed to confirm email: ' + confirmError.message)
-                setMessage('')
+              if (directToken && directEmail) {
+                const { data, error: confirmError } = await supabase.auth.verifyOtp({
+                  type: 'signup',
+                  token: directToken,
+                  email: directEmail,
+                })
+                
+                console.log('Supabase verifyOtp response (direct hash):', { data, error: confirmError })
+                
+                if (confirmError) {
+                  setError('Failed to confirm email: ' + confirmError.message)
+                  setMessage('')
+                } else {
+                  setMessage('Email confirmed successfully! You can now sign in.')
+                }
               } else {
-                setMessage('Email confirmed successfully! You can now sign in.')
+                setError('Invalid confirmation link - missing token or email')
+                setMessage('')
               }
             } else {
-              setError('Invalid confirmation link - no token found')
+              setError('Invalid confirmation link - no token or email found')
               setMessage('')
             }
           }
